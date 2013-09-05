@@ -17,10 +17,7 @@ if numel(pD)>1
     error('Method works only for a single DiscreteD object');
 end;
 
-res = bsxfun(@gt, cumsum(double(pD)), rand(nData, 1));
-% Find first in each row
-[R, ~] = find(res' == 1 & cumsum(res, 2)' == 1);
-
+% Solution 1: loop
 %R = zeros(nData, 1);
 % We can of course use parfor here since the loop has
 % perfect parallelism but this is probably not a major
@@ -28,3 +25,12 @@ res = bsxfun(@gt, cumsum(double(pD)), rand(nData, 1));
 %for i = 1:nData
 %    R(i) = find(rand() <= cumsum(double(pD)), 1, 'first');
 %end
+
+% Solution 2: Matlab magic
+% res = bsxfun(@gt, cumsum(double(pD)), rand(nData, 1));
+% % Find first in each row
+% [R, ~] = find(res' == 1 & cumsum(res, 2)' == 1);
+
+% Solution 3: builtin
+mass = double(pD);
+R = randsample(1:length(mass), nData, 'true', mass);
