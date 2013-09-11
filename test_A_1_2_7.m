@@ -1,5 +1,5 @@
 
-function test_A_1_2()
+function test_A_1_2_7()
     
     A = [0.99 0.01; 0.03 0.97];
     q = [0.75 0.25]';
