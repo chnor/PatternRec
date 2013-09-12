@@ -1,1 +1,1 @@
-Readme
+Course project for Pattern Recognition
