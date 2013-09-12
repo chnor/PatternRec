@@ -19,17 +19,13 @@ function S=rand(mc,T)
 %
 %---------------------------------------------
 %Code Authors:
+% Christopher Norman
+% Pierre Laurent
 %---------------------------------------------
 
 S = zeros(1, T);
 d0 = DiscreteD(mc.InitialProb);
 S(1) = rand(d0, 1);
-
-% Check if we've absorbed
-if S(1) == mc.nStates+1
-    S = [];
-    return;
-end
 
 for i = 2:T
     S(i) = rand(DiscreteD(mc.TransitionProb(S(i-1), :)), 1);
@@ -39,5 +35,3 @@ for i = 2:T
         return;
     end
 end
-
-

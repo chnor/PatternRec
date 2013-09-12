@@ -11,6 +11,8 @@ function R=rand(pD,nData)
 %
 %----------------------------------------------------
 %Code Authors:
+% Christopher Norman
+% Pierre Laurent
 %----------------------------------------------------
 
 if numel(pD)>1
@@ -25,22 +27,26 @@ end;
 % In the case of discrete distributions this amount to finding
 % the first index where the cumulative probability exceeds t.
 
-% Solution 1: loop
-R = zeros(nData, 1);
-% We can of course use parfor here since the loop has
-% perfect parallelism but this is probably not a major
-% bottleneck...
-d = cumsum(double(pD));
-for i = 1:nData
-   R(i) = find(rand() <= d, 1, 'first');
+discrete_rand_algorithm = 'matrix';
+switch discrete_rand_algorithm
+    case 'loop'
+        % Solution 1: loop
+        R = zeros(nData, 1);
+        d = cumsum(double(pD));
+        for i = 1:nData
+           R(i) = find(rand() <= d, 1, 'first');
+        end
+    case 'matrix'
+        % Solution 2: The same as the loop except it uses matrix
+        % operations. Faster than the loop if pD has small size.
+        res = bsxfun(@gt, cumsum(double(pD)), rand(nData, 1));
+        % Find first 1 in each row
+        % There doesn't appear to exist substantially better
+        % ways to do this in Matlab
+        [R, ~] = find(res' == 1 & cumsum(res, 2)' == 1);
+    case 'builtin'
+        % Solution 3: Builtin. Faster than sol. 1 and 2 by orders
+        % of magnitude.
+        mass = double(pD);
+        R = randsample(1:length(mass), nData, 'true', mass);
 end
-
-% Solution 2: The same as the loop except it uses matrix
-% operations.
-% res = bsxfun(@gt, cumsum(double(pD)), rand(nData, 1));
-% % Find first in each row
-% [R, ~] = find(res' == 1 & cumsum(res, 2)' == 1);
-
-% Solution 3: builtin
-% mass = double(pD);
-% R = randsample(1:length(mass), nData, 'true', mass);
