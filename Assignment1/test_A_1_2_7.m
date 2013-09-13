@@ -1,4 +1,3 @@
-
 function test_A_1_2_7()
     
     A = [0.99 0.01; 0.03 0.97];
@@ -40,6 +39,9 @@ function test_A_1_2_7()
     plot([mu_2(1) pc_2_2(1)], [mu_2(2) pc_2_2(2)], '.-k');
     
     axis equal;
+    title('Multivariate HMM output');
+    xlabel('x_1');
+    ylabel('x_2');
     
     hold off
     
