@@ -28,10 +28,10 @@ function test_A_1_2_7()
     % standard deviations
     e_1 = normc(e_1);
     e_2 = normc(e_2);
-    pc_1_1 = mu_1 + lambda_1(1, 1)*e_1(:, 1);
-    pc_1_2 = mu_1 + lambda_1(2, 2)*e_1(:, 2);
-    pc_2_1 = mu_2 + lambda_2(1, 1)*e_2(:, 1);
-    pc_2_2 = mu_2 + lambda_2(2, 2)*e_2(:, 2);
+    pc_1_1 = mu_1 + sqrt(abs(lambda_1(1, 1)))*e_1(:, 1);
+    pc_1_2 = mu_1 + sqrt(abs(lambda_1(2, 2)))*e_1(:, 2);
+    pc_2_1 = mu_2 + sqrt(abs(lambda_2(1, 1)))*e_2(:, 1);
+    pc_2_2 = mu_2 + sqrt(abs(lambda_2(2, 2)))*e_2(:, 2);
     % Plot the PCs
     plot([mu_1(1) pc_1_1(1)], [mu_1(2) pc_1_1(2)], '.-k');
     plot([mu_1(1) pc_1_2(1)], [mu_1(2) pc_1_2(2)], '.-k');
@@ -40,8 +40,8 @@ function test_A_1_2_7()
     
     axis equal;
     title('Multivariate HMM output');
-    xlabel('x_1');
-    ylabel('x_2');
+    xlabel('x_t');
+    ylabel('y_t');
     
     hold off
     
