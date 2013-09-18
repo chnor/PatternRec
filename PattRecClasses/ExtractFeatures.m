@@ -70,4 +70,10 @@ function [features] = ExtractFeatures(data)
     
     features(:, data(3, :) == 0) = 0;
     
+    % % To run:
+    % P = ExtractFeatures(DrawCharacter);
+    % t = 1:size(P, 2);
+    % plot(t, P(4, :), t, P(5, :)); % Example: plot delta_1 and delta_2
+    % axis([0, size(P, 2), -1.2, 1.2]);
+    
 end
