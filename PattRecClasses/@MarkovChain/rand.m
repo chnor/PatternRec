@@ -23,15 +23,70 @@ function S=rand(mc,T)
 % Pierre Laurent
 %---------------------------------------------
 
-S = zeros(1, T);
-d0 = DiscreteD(mc.InitialProb);
-S(1) = rand(d0, 1);
+% Pregenerated jumps will be faster if T >> nStates
+% and if the chain doesn't absorb. For finite chains
+% with very low expected length the naive version will
+% likewise be faster.
+% TODO calculate better cutoffs experimentally.
 
-for i = 2:T
-    S(i) = rand(DiscreteD(mc.TransitionProb(S(i-1), :)), 1);
-    % Check if we've absorbed
-    if S(i) == mc.nStates+1
-        S = S(1:i-1);
-        return;
+expected_length = T;
+if finiteDuration(mc)
+    Q = mc.TransitionProb(1:mc.nStates, 1:mc.nStates);
+    tau = (eye(2) - Q) \ ones(mc.nStates, 1);
+    expected_length = mc.InitialProb'*tau;
+end
+
+if expected_length / mc.nStates < 6.7
+    algorithm = 'naive_algorithm';
+else
+    if finiteDuration(mc)
+        algorithm = 'pregenerated_jumps_finite';
+    else
+        algorithm = 'pregenerated_jumps';
+    end
+end
+
+switch algorithm
+case 'pregenerated_jumps'
+    c = zeros(mc.nStates, T);
+    for i = 1:mc.nStates
+        c(i, :) = rand(DiscreteD(mc.TransitionProb(i, :)), T);
+    end
+    c_i = ones(mc.nStates, 1);
+    S = zeros(1, T);
+    d0 = DiscreteD(mc.InitialProb);
+    S(1) = rand(d0, 1);
+    for i = 2:T
+        S(i) = c(S(i-1), c_i(S(i-1)));
+        c_i(S(i-1)) = c_i(S(i-1)) + 1;
+    end
+case 'pregenerated_jumps_finite'
+    c = zeros(mc.nStates + 1, T);
+    for i = 1:mc.nStates
+        c(i, :) = rand(DiscreteD(mc.TransitionProb(i, :)), T);
+    end
+    c(mc.nStates + 1, :) = mc.nStates + 1;
+    c_i = ones(mc.nStates + 1, 1);
+    S = zeros(1, T);
+    d0 = DiscreteD(mc.InitialProb);
+    S(1) = rand(d0, 1);
+%     S(1) = 2;
+    for i = 2:T
+        S(i) = c(S(i-1), c_i(S(i-1)));
+        c_i(S(i-1)) = c_i(S(i-1)) + 1;
+    end
+    S = S(1:find(S == mc.nStates + 1, 1, 'first')-1);
+case 'naive_algorithm'
+    S = zeros(1, T);
+    d0 = DiscreteD(mc.InitialProb);
+    S(1) = rand(d0, 1);
+
+    for i = 2:T
+        S(i) = rand(DiscreteD(mc.TransitionProb(S(i-1), :)), 1);
+        % Check if we've absorbed
+        if S(i) == mc.nStates+1
+            S = S(1:i-1);
+            return;
+        end
     end
 end
