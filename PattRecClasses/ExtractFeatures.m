@@ -6,7 +6,7 @@
 %   was not
 % 
 % Result:
-% A 7 by n matrix where
+% A 8 by n matrix where
 %   row 1 contains the cosine of the tangents
 %   row 2 contains the sine of the tangents
 %   row 3 contains the cosine of the angular velocity
@@ -17,6 +17,8 @@
 %       box of the character
 %   row 6 contains the angle of the tangents in radians
 %   row 7 contains the angular velocity of the tangents in radians
+%   row 8 contains a sequence of booleans specifying whether the
+%       pen was down or not
 %----------------------------------------------------
 % Code Authors:
 % Christopher Norman
@@ -43,21 +45,27 @@
 function [features] = ExtractFeatures(data)
     % Preprocess
     
+    % Introduce a small amount of noise to avoid consecutive
+    % identical frames
+    data(1:2, :) = data(1:2, :) + 1e-6 * rand(size(data(1:2, :)));
+    
 %     data(1, :) = smooth(data(1, :))';
 %     data(2, :) = smooth(data(2, :))';
-
+    
 %     data = Resample(data, 0.5, 'linear');
-    data = StraightenLiftedStrokes(data);
+%     data = StraightenLiftedStrokes(data);
         
     % Extract features
     height = data(2, :);
-    min_height = min(height(data(3, :) == 1));
-    max_height = max(height(data(3, :) == 1));
-    height = (height - min_height) / (max_height - min_height);
+    if any(data(3, :) == 1) % Any strokes?
+        min_height = min(height(data(3, :) == 1));
+        max_height = max(height(data(3, :) == 1));
+        height = (height - min_height) / (max_height - min_height);
+    end
     
     alpha = normc(diff(data(1:2, :), 1, 2));
     
-    direction = smooth(atan2(alpha(2, :), alpha(1, :)))';
+    direction = atan2(alpha(2, :), alpha(1, :));
     
     curvature = diff(direction);
     curvature = mod(curvature + pi, 2*pi) - pi;
@@ -73,8 +81,9 @@ function [features] = ExtractFeatures(data)
                 height(4:end); ...
                 direction(3:end); ...
                 curvature(2:end); ...
+                data(3, 4:end); ...
                 ];
     
-%     features(:, data(3, :) == 0) = 0;
+    features(:, data(3, :) == 0) = 0;
     
 end
