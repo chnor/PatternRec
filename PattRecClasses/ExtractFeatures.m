@@ -46,8 +46,8 @@ function [features] = ExtractFeatures(data)
 %     data(1, :) = smooth(data(1, :))';
 %     data(2, :) = smooth(data(2, :))';
 
-    data = Resample(data, 0.5, 'linear');
-%     data = StraightenLiftedStrokes(data);
+%     data = Resample(data, 0.5, 'linear');
+    data = StraightenLiftedStrokes(data);
         
     % Extract features
     height = data(2, :);
@@ -75,6 +75,6 @@ function [features] = ExtractFeatures(data)
                 curvature(2:end); ...
                 ];
     
-    features(:, data(3, :) == 0) = 0;
+%     features(:, data(3, :) == 0) = 0;
     
 end
