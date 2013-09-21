@@ -23,24 +23,6 @@
 % Code Authors:
 % Christopher Norman
 % Pierre Laurent
-%----------------------------------------------------
-% % To run:
-% P = ExtractFeatures(DrawCharacter);
-% t = 1:size(P, 2);
-% plot(t, P(4, :), t, P(5, :)); % Example: plot delta_1 and delta_2
-% axis([0, size(P, 2), -1.2, 1.2]);
-%
-% * References
-% * sine and cosine of direction, see
-% S. Jaeger, S. Manke, J. Reichert, and A. Waibel. Online
-% Handwriting Recognition: The NPen++ Recognizer.
-% (ref for both angle and curvature)
-% * Normalized derivatives? see
-% M. Pastor, A. Toselli, and E. Vidal. Writing Speed Nor-
-% malization for On-Line Handwritten Text Recognition
-% * Height is from
-% Bharath A, Sriganesh Madhvanath. Hidden Markov Models
-% for Online Handwritten Tamil Word Recognition
 
 function [features] = ExtractFeatures(data)
     % Preprocess
@@ -49,12 +31,6 @@ function [features] = ExtractFeatures(data)
     % identical frames
     data(1:2, :) = data(1:2, :) + 1e-6 * rand(size(data(1:2, :)));
     
-%     data(1, :) = smooth(data(1, :))';
-%     data(2, :) = smooth(data(2, :))';
-    
-%     data = Resample(data, 0.5, 'linear');
-%     data = StraightenLiftedStrokes(data);
-        
     % Extract features
     height = data(2, :);
     if any(data(3, :) == 1) % Any strokes?
@@ -74,16 +50,14 @@ function [features] = ExtractFeatures(data)
     beta_2 = alpha(1, 1:end-2) .* alpha(2, 3:end) - alpha(2, 1:end-2) .* alpha(1, 3:end);
     beta = normc([beta_1; beta_2]);
     
-    features = [alpha(1, 3:end); ...
-                alpha(2, 3:end); ...
+    features = [alpha(1, 2:end-1); ...
+                alpha(2, 2:end-1); ...
                 beta(1, :); ...
                 beta(2, :); ...
-                height(4:end); ...
-                direction(3:end); ...
+                height(2:end-2); ...
+                direction(2:end-1); ...
                 curvature(2:end); ...
-                data(3, 4:end); ...
+                data(3, 2:end-2); ...
                 ];
-    
-    features(:, data(3, :) == 0) = 0;
     
 end

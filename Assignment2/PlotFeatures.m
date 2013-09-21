@@ -1,13 +1,23 @@
 function PlotFeatures()
     
     P = DrawCharacter;
+    
+    % Resample (not used)
+    % P = Resample(P, 0.5, 'linear');
+    % Interpolate interstrokes (not used)
+    % P = StraightenLiftedStrokes(P);
+    
     F = ExtractFeatures(P);
     if all(F(8, :) == 0)
         % No strokes
         return;
     end
+    % Exclude non-strokes
     F = F(:, F(8, :) ~= 0);
-    assert(all(sum(diff(F, 1, 2) ~= 0, 1) ~= 0));
+    % Assert that all consecutive frames for the
+    % used features [1, 2, 4, 5] are different
+    assert(all(sum(diff(F([1, 2, 4, 5], :), 1, 2) ~= 0, 1) ~= 0));
+    
     t = 1:size(F, 2);
     
     subplot(3, 1, 1);
