@@ -43,7 +43,7 @@ for i=1:numel(hmm)%for all HMM objects
     [pX logS] = prob(hmm(i).OutputDistr, x);
     [alfaHat c] = forward(mc, pX);
     for k=1:T
-    c(k) = c(k)*exp(logS(k));
+        c(k) = c(k)*exp(logS(k));
     end
     a = log(c);
     logP(i) = sum(a);
