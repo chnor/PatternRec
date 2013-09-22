@@ -13,7 +13,7 @@ Var_2 = 2^2;
 
 Gauss1 = GaussD('Mean', mu_1, 'Variance', Var_1);
 Gauss2 = GaussD('Mean', mu_2, 'Variance', Var_2);
-Gauss = [Gauss1;Gauss2]
+Gauss = [Gauss1; Gauss2]
 
 pX = prob(Gauss, X);
 
