@@ -6,7 +6,7 @@
 %   was not
 % 
 % Result:
-% A 8 by n matrix where
+% A 7 by n matrix where
 %   row 1 contains the cosine of the tangents
 %   row 2 contains the sine of the tangents
 %   row 3 contains the cosine of the angular velocity
@@ -17,8 +17,6 @@
 %       box of the character
 %   row 6 contains the angle of the tangents in radians
 %   row 7 contains the angular velocity of the tangents in radians
-%   row 8 contains a sequence of booleans specifying whether the
-%       pen was down or not
 %----------------------------------------------------
 % Code Authors:
 % Christopher Norman
@@ -26,6 +24,9 @@
 
 function [features] = ExtractFeatures(data)
     % Preprocess
+    
+    % Interpolate interstrokes (not used)
+    % data = StraightenLiftedStrokes(data);
     
     % Introduce a small amount of noise to avoid consecutive
     % identical frames
@@ -39,13 +40,17 @@ function [features] = ExtractFeatures(data)
         height = (height - min_height) / (max_height - min_height);
     end
     
+    % cos(theta), sin(theta)
     alpha = normc(diff(data(1:2, :), 1, 2));
     
+    % theta
     direction = atan2(alpha(2, :), alpha(1, :));
     
+    % delta theta
     curvature = diff(direction);
     curvature = mod(curvature + pi, 2*pi) - pi;
     
+    % cos(delta theta), sin(delta theta)
     beta_1 = alpha(1, 1:end-2) .* alpha(1, 3:end) + alpha(2, 1:end-2) .* alpha(2, 3:end);
     beta_2 = alpha(1, 1:end-2) .* alpha(2, 3:end) - alpha(2, 1:end-2) .* alpha(1, 3:end);
     beta = normc([beta_1; beta_2]);
@@ -57,7 +62,9 @@ function [features] = ExtractFeatures(data)
                 height(2:end-2); ...
                 direction(2:end-1); ...
                 curvature(2:end); ...
-                data(3, 2:end-2); ...
                 ];
+    
+    % Exclude non-strokes
+    features = features(:, data(3, :) ~= 0);
     
 end
