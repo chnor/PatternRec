@@ -24,6 +24,8 @@
 %
 %----------------------------------------------------
 %Code Authors:
+% Pierre Laurent
+% Christopher Norman
 %----------------------------------------------------
 
 function logP=logprob(hmm,x)
@@ -40,11 +42,9 @@ for i=1:numel(hmm)%for all HMM objects
     %(5.54): ln(P[x1 ... xT | hmm] = sum(t=1, T, ln(c_t))) (infinite duration)
     %Check (5.55) for finite duration
     mc = hmm(i).StateGen;
-    [pX logS] = prob(hmm(i).OutputDistr, x);
-    [alfaHat c] = forward(mc, pX);
-    for k=1:T
-        c(k) = c(k)*exp(logS(k));
-    end
+    [pX, logS] = prob(hmm(i).OutputDistr, x);
+    [~, c] = forward(mc, pX);
     a = log(c);
+    a(1:T) = a(1:T) + logS;
     logP(i) = sum(a);
 end;
