@@ -9,26 +9,34 @@ savefile = 'database.mat';
 
 if exist(savefile) == 2
     load(savefile);
-    N = length(dbMat);
+    N = length(dbMat(:,1));
+
+else
+    dbMat(1).length = 1;
+    dbMat(1).name = A;
+    dbMat(1).CharacterMat = DrawCharacter;
+    dbMat(1).ExFeature = ExtractFeatures(dbMat(1).CharacterMat);
+    save(savefile, 'dbMat');
+    return
+    
 end
 
 a = N + 1;
 
 for i=1:N
-    if (dbMat(i).name == A)
+    if (dbMat(i,1).name == A)
         a = i;
     end
-    
-    
-    dbMat(a).length = dbMat(i).length + 1;
-    size = dbMat(a).length;
-    dbMat(a).CharacterMat(size) = DrawCharacter;
-    dbMat(a).ExFeature(size) = ExtractFeatures(dbMat(N+1).CharacterMat);
-    
-    %     else
-    % dbMat(N+1).name = A;
-    % dbMat(N+1).length = 1;
-    % dbMat(N+1).CharacterMat = DrawCharacter;
-    % dbMat(N+1).ExFeature = ExtractFeatures(dbMat(N+1).CharacterMat);
-    %     end
+end
+
+    if (a == N+1)
+        size = 1;
+    else size = dbMat(a,1).length + 1;
+    end
+    dbMat(a,1).length = size;
+    dbMat(a, size).name = A;
+    dbMat(a, size).num = size;
+    dbMat(a, size).CharacterMat = DrawCharacter;
+    dbMat(a, size).ExFeature = ExtractFeatures(dbMat(a, size).CharacterMat);
+ 
     save(savefile, 'dbMat');
