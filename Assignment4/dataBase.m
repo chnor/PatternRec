@@ -20,7 +20,7 @@ else
     x.name = A;
     x.CharacterMat = DrawCharacter;
     x.ExFeature = ExtractFeatures(x.CharacterMat);
-    dbMat(1) = {x}
+    dbMat(1) = {x};
     save(savefile, 'dbMat');
     return
     
@@ -37,7 +37,7 @@ end
     if (a == N+1)
         size = 1;
     else
-        size = dbMat{a,1}.length + 1;
+        size = dbMat{a,1}.length + 1;   
         dbMat{a,1}.length = size;
     end
     x.length = size;
