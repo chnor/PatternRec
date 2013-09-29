@@ -16,11 +16,11 @@ if exist(savefile) == 2
     N = length(dbMat(:,1));
 
 else
-    x.length = 1;
-    x.name = A;
-    x.CharacterMat = DrawCharacter;
-    x.ExFeature = ExtractFeatures(x.CharacterMat);
-    dbMat(1) = {x}
+    x(1).length = 1;
+    x(1).name = A;
+    x(1).CharacterMat = DrawCharacter;
+    x(1).ExFeature = ExtractFeatures(dbMat(1).CharacterMat);
+    dbMat {1,1} = x;
     save(savefile, 'dbMat');
     return
     
@@ -29,23 +29,20 @@ end
 a = N + 1;
 
 for i=1:N
-    if (dbMat{i,1}.name == A)
+    if (dbMat(i,1).name == A)
         a = i;
     end
 end
 
     if (a == N+1)
         size = 1;
-    else
-        size = dbMat{a,1}.length + 1;
-        dbMat{a,1}.length = size;
+    else size = dbMat(a,1).length + 1;
     end
-    x.length = size;
-    x.name = A;
-    x.num = size;
-    x.CharacterMat = DrawCharacter;
-    x.ExFeature = ExtractFeatures(x.CharacterMat);
-    dbMat{a, size} = x;
+    dbMat(a,1).length = size;
+    dbMat(a, size).name = A;
+    dbMat(a, size).num = size;
+    dbMat(a, size).CharacterMat = DrawCharacter;
+    dbMat(a, size).ExFeature = ExtractFeatures(dbMat(a, size).CharacterMat);
  
     save(savefile, 'dbMat');
- end
+ 
