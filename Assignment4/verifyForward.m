@@ -1,6 +1,5 @@
 function result = verifyForward()
 
-%[alphaHat, c]=verifyForward()
 %Testing the forward function using the results of our school exercises on
 %the book.
 %Result:
