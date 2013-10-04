@@ -8,7 +8,7 @@
 % Christopher Norman
 %--------------------------------------------------------
 
-function betaHat = TestBackward3()
+function [betaHat_modified betaHat_original] = TestBackward3()
 
     z = [1, 2, 4, 4, 1];
 
@@ -26,6 +26,7 @@ function betaHat = TestBackward3()
 
     [~, c] = forward(mc, pX);
     
-    betaHat = backward(mc, pX, c);
+    betaHat_modified = backward(mc, pX, c);
+    betaHat_original = backward_original(mc, pX, c);
     
 end

@@ -6,7 +6,7 @@
 % Christopher Norman
 %--------------------------------------------------------
 
-function betaHat = TestBackward1()
+function [betaHat_modified betaHat_original] = TestBackward1()
     
     X = [-.2 2.6 1.3];
     
@@ -23,7 +23,8 @@ function betaHat = TestBackward1()
     % the correctness of forward as well. Make tests as separate
     % as possible.
     c = [1, 0.1625, 0.8266, 0.0581];
-    betaHat = backward(mc, pX, c);
+    betaHat_original = backward_original(mc, pX, c);
+    betaHat_modified = backward(mc, pX, c);
     
 end
 

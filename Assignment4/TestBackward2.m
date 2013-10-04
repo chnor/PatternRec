@@ -15,7 +15,7 @@
 % Christopher Norman
 %--------------------------------------------------------
 
-function betaHat = TestBackward2()
+function [betaHat_modified betaHat_original] = TestBackward2()
 
     q = [1 0];
     A = [.9 .1 0; 0 .9 .1];
@@ -32,7 +32,8 @@ function betaHat = TestBackward2()
     pX = prob(Gauss, [-0.2]);
     % Should give [0; 0] but the original backward gives
     % [NaN; Inf]
-    betaHat = backward(mc, pX, [1, 0]);
+    betaHat_modified = backward(mc, pX, [1, 0]);
+    betaHat_original = backward_original(mc, pX, [1, 0]);
 
 end
 
