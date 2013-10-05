@@ -1,6 +1,8 @@
 function [data, chars] = InputCharacters(chars_to_sample, n, save)
-    
-    save = 0;
+
+    if nargin < 3
+        save = 0;
+    end
     if isa(chars_to_sample, 'char')
         chars_to_sample = {chars_to_sample};
     end
