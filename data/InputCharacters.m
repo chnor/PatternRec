@@ -1,5 +1,6 @@
-function [data, chars] = InputCharacters(chars_to_sample, n)
+function [data, chars] = InputCharacters(chars_to_sample, n, save)
     
+    save = 0;
     if isa(chars_to_sample, 'char')
         chars_to_sample = {chars_to_sample};
     end
@@ -17,4 +18,9 @@ function [data, chars] = InputCharacters(chars_to_sample, n)
             data{(i-1)*n + j} = DrawCharacter;
         end
     end
+    
+     if save == 'save'
+     file = strcat('data_', chars_to_sample, '.mat');
+     save(file{1}, 'data');
+     end
 end
