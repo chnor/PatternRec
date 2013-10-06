@@ -1,4 +1,4 @@
-function HMMs = TrainModel(data, labels, n, classes, used_features)
+function [HMMs, R] = TrainModel(data, labels, n, classes, used_features)
     
     assert(all(size(data) == size(labels)));
     assert(all(size(n) == size(classes)));
@@ -38,8 +38,8 @@ function HMMs = TrainModel(data, labels, n, classes, used_features)
         end
         
         disp('Plotting ROC');
-        positive = cell2mat(response(classes == classes(i)));
-        negative = cell2mat(response(classes ~= classes(i)));
+        positive = cell2mat(response(ismember(classes, classes(i))));
+        negative = cell2mat(response(~ismember(classes, classes(i))));
         ComputeROC(positive(:), negative(:));
         drawnow;
         R{i} = response;
