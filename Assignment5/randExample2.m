@@ -1,4 +1,4 @@
-function randExample (HMMs)
+function randExample (trainingSet)
 
 %Input:
 %HMMs that you can find using the TrainClassifiers function
@@ -9,21 +9,27 @@ function randExample (HMMs)
 % Christopher Norman
 %----------------------------------------------------
 vectorSize = 10000;
+HMMs = trainingSet.HMMs;
+classes = trainingSet.classes;
 A = [HMMs{1,:}];
 
 
 for i=1:9
-randVec{i} = rand(HMMs{i}, vectorSize);
+    randVec{i} = rand(HMMs{i}, vectorSize);
 end
 
- figure('Name','Plotting rand vectors obtained from each source','NumberTitle','off')
+figure('Name','Plotting rand vectors obtained from each source','NumberTitle','off')
 
 
 for i = 1:9
+    x = 1 : 11;
     subplot(3,3,i)
-    stem(logprob(A, randVec{i}))
+    stem(x, logprob(A, randVec{i}));
+    set(gca, 'XtickLabel', classes);
+    set(gca, 'Xtick', 1:11);
     xlabel ('HMM index');
     ylabel ('logprob(X, HMM)');
+    title (classes(i))
 end
 
 
