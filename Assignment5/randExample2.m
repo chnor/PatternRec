@@ -1,7 +1,8 @@
 function randExample (trainingSet)
 
 %Input:
-%HMMs that you can find using the TrainClassifiers function
+%trainingSet that you can find using the TrainClassifiersPierre function.
+%Structure containing the HMMs, and the classes objects.
 %
 %----------------------------------------------------
 %Code Authors:
@@ -31,9 +32,6 @@ for i = 1:9
     ylabel ('logprob(X, HMM)');
     title (classes(i))
 end
-
-
-
 
 end
 
