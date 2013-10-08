@@ -5,11 +5,11 @@
 %   HMMs: a cell array of HMMs that recognize each character
 %   R:    a cell array of the ROC curves for each HMM
 
-function [HMMs, R] = TrainClassifiers(classes)
+function [HMMs, R, classes] = TrainClassifiers(classes)
     
     [data, chars] = LoadData;
     if nargin < 1
-        classes = unique(chars);
+        classes = unique(chars, 'stable');
     end
     
     % Set number of states (strokes) for each character
