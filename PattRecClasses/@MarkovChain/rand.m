@@ -32,7 +32,8 @@ function S=rand(mc,T)
 expected_length = T;
 if finiteDuration(mc)
     Q = mc.TransitionProb(1:mc.nStates, 1:mc.nStates);
-    tau = (eye(2) - Q) \ ones(mc.nStates, 1);
+    tau = (eye(mc.nStates) - Q) \ ones(mc.nStates, 1);
+    %8/10/2013: tau = (eye(2) - Q) \ ones(mc.nStates, 1);
     expected_length = mc.InitialProb'*tau;
 end
 
