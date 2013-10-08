@@ -1,4 +1,4 @@
-function result = userInput(trainingSet)
+function userInput(trainingSet)
 
 HMMs = trainingSet.HMMs;
 classes = trainingSet.classes;
