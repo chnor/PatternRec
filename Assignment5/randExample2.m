@@ -9,15 +9,14 @@ function randExample (HMMs)
 % Christopher Norman
 %----------------------------------------------------
 vectorSize = 10000;
-characterToPot = 2;
 A = [HMMs{1,:}];
 
 
 for i=1:9
-randVec{i} = rand(HMMs{characterToPot}, vectorSize);
+randVec{i} = rand(HMMs{i}, vectorSize);
 end
 
- figure('Name','Plotting rand vectors obtained from source 2 ','NumberTitle','off')
+ figure('Name','Plotting rand vectors obtained from each source','NumberTitle','off')
 
 
 for i = 1:9
