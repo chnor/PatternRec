@@ -22,11 +22,11 @@ figure('Name','Plotting rand vectors obtained from each source','NumberTitle','o
 
 
 for i = 1:9
-    x = 1 : 11;
+    x = 1 : size(HMMs, 2);
     subplot(3,3,i)
     stem(x, logprob(A, randVec{i}));
     set(gca, 'XtickLabel', classes);
-    set(gca, 'Xtick', 1:11);
+    set(gca, 'Xtick', 1:size(HMMs, 2));
     xlabel ('HMM index');
     ylabel ('logprob(X, HMM)');
     title (classes(i))

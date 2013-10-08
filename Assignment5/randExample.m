@@ -24,10 +24,10 @@ figure('Name',combinedStr{1},'NumberTitle','off')
 
 for i = 1:9
     subplot(3,3,i)
-    x = 1:11;
+    x = 1:size(HMMs, 2);
     stem(x, logprob(A, randVec{i}))
     set(gca, 'XtickLabel', classes);
-    set(gca, 'Xtick', 1:11);
+    set(gca, 'Xtick', 1:size(HMMs, 2));
     xlabel ('HMM index');
     ylabel ('logprob(X, HMM)');
 end
