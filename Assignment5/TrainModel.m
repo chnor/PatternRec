@@ -1,4 +1,4 @@
-function [HMMs, R] = TrainModel(data, labels, n, classes, used_features, frac)
+function [HMMs, R] = TrainModel(data, labels, n, classes, used_features, frac, ITER)
     
     assert(all(size(data) == size(labels)));
     assert(all(size(n) == size(classes)));
@@ -29,26 +29,45 @@ function [HMMs, R] = TrainModel(data, labels, n, classes, used_features, frac)
     HMMs = cell(1, length(classes));
     R = cell(1, length(classes));
     for i = 1:length(split_features)
-        disp(['Training model for class: ', classes(i)]);
+        disp(['Training model for class: ', classes{i}]);
         
-        f = split_features{i};
-        num_f = size(split_features{i}, 2);
-        f = f(randperm(num_f));
-        training_set = f(1:floor(frac*num_f));
-        testing_set = f(floor(frac*num_f)+1:end);
-        HMMs{i} = Train(training_set, testing_set, n(i), 20);
+        AUC_opt = 0;
         
-        response = cell(1, length(classes));
-        for j = 1:length(split_features)
-            response{j} = cellfun(@(f) -logprob(HMMs{i}, f), split_features{j});
+        for iter = 1:ITER
+            f = split_features{i};
+            num_f = size(split_features{i}, 2);
+            f = f(randperm(num_f));
+            training_set = f(1:floor(frac*num_f));
+            testing_set = f(floor(frac*num_f)+1:end);
+            h = Train(training_set, testing_set, n(i), 20);
+            
+            disp('Training finished, calculating cross-class response');
+            response = cell(1, length(classes));
+            for j = 1:length(split_features)
+                response{j} = cellfun(@(f) -logprob(h, f), split_features{j});
+            end
+
+            disp('Plotting ROC');
+            positive = cell2mat(response(ismember(classes, classes(i))));
+            negative = cell2mat(response(~ismember(classes, classes(i))));
+            ROC = ComputeROC(positive(:), negative(:));
+            drawnow;
+            
+            AUC = polyarea(ROC(:, 1), ROC(:, 2)) + 0.5;
+            disp(['AUC = ', num2str(AUC)]);
+            if AUC > AUC_opt
+                if iter > 1
+                    disp('Improvement');
+                end
+                HMMs{i} = h;
+                R{i} = response;
+                AUC_opt = AUC;
+            end
+            if AUC_opt > 0.97
+                disp('AUC close to optimal, skipping additional iterations');
+                break;
+            end
         end
-        
-        disp('Plotting ROC');
-        positive = cell2mat(response(ismember(classes, classes(i))));
-        negative = cell2mat(response(~ismember(classes, classes(i))));
-        ComputeROC(positive(:), negative(:));
-        drawnow;
-        R{i} = response;
     end
     
 end

@@ -1,5 +1,5 @@
 
-function ComputeROC(fc, nfc)
+function ROC = ComputeROC(fc, nfc)
     
     c = [fc; nfc];
     
