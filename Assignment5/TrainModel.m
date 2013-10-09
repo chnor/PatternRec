@@ -1,4 +1,4 @@
-function [HMMs, R] = TrainModel(data, labels, n, classes, used_features)
+function [HMMs, R] = TrainModel(data, labels, n, classes, used_features, frac)
     
     assert(all(size(data) == size(labels)));
     assert(all(size(n) == size(classes)));
@@ -30,7 +30,13 @@ function [HMMs, R] = TrainModel(data, labels, n, classes, used_features)
     R = cell(1, length(classes));
     for i = 1:length(split_features)
         disp(['Training model for class: ', classes(i)]);
-        HMMs{i} = Train(split_features{i}, split_features{i}, n(i), 20);
+        
+        f = split_features{i};
+        num_f = size(split_features{i}, 2);
+        f = f(randperm(num_f));
+        training_set = f(1:floor(frac*num_f));
+        testing_set = f(floor(frac*num_f)+1:end);
+        HMMs{i} = Train(training_set, testing_set, n(i), 20);
         
         response = cell(1, length(classes));
         for j = 1:length(split_features)

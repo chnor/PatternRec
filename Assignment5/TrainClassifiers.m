@@ -2,10 +2,13 @@
 % Input:
 %   classes: (optional) the characters to use
 % Output:
-%   HMMs: a cell array of HMMs that recognize each character
+%   Classifier: a stuct containing:
+%       HMMs: a cell array of HMMs that recognize each character
+%       classes: the class label for the corresponding HMM
+%       features: used features
 %   R:    a cell array of the ROC curves for each HMM
 
-function [HMMs, R, classes] = TrainClassifiers(classes)
+function [Classifier, R] = TrainClassifiers(classes)
     
     [data, chars] = LoadData;
     if nargin < 1
@@ -21,6 +24,10 @@ function [HMMs, R, classes] = TrainClassifiers(classes)
 %     n(ismember(classes, 'o')) = 1;
 %     n(ismember(classes, 's')) = 1;
     
-    [HMMs, R] = TrainModel(data, chars, n, classes, 1:6);
+    features_to_use = 1:6;
+    [HMMs, R] = TrainModel(data, chars, n, classes, features_to_use, 0.3);
+    Classifier.HMMs = HMMs;
+    Classifier.classes = classes;
+    Classifier.features = features_to_use;
     
 end
