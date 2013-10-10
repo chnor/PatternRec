@@ -20,7 +20,11 @@ set(gca, 'Xtick', 1:size(classes, 2));
 set(gca,'XLim',[0 size(trueAnswer,2)+1]);
 xlabel ('Character');
 ylabel ('%');
-title('')
+average = sum(trueAnswer)/(size(trueAnswer,2));
+
+addAverage = strcat({'Average:'}, {' '}, num2str(average), {'%'});
+title (addAverage);
+
 
 figure('Name','Repartition for each source','NumberTitle','off')
 a =  find(Matrix(:,1)>0);
@@ -30,18 +34,18 @@ title ('Source: a');
 uicontrol('Style', 'popup',...
     'String', classes,...
     'Position', [20 340 100 50],...
-    'Callback', {@setmap, Matrix, classes});   
+    'Callback', {@setmap, Matrix, classes});
 
 
-function setmap(hObj,event, Matrix, classes) 
-%Called when user activates popup menu
-val = get(hObj,'Value');
-a =  find(Matrix(:,val)>0);
-combinedStr = strcat({'Source:'}, {' '}, classes(val));
-pie3(Matrix(a, val)); legend(classes(a));
-title (combinedStr);
-
-end
+    function setmap(hObj,event, Matrix, classes)
+        %Called when user activates popup menu
+        val = get(hObj,'Value');
+        a =  find(Matrix(:,val)>0);
+        combinedStr = strcat({'Source:'}, {' '}, classes(val));
+        pie3(Matrix(a, val)); legend(classes(a));
+        title (combinedStr);
+        
+    end
 
 end
 
