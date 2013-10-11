@@ -11,8 +11,7 @@ function ROC = ComputeROC(fc, nfc)
         ROC(i, 2) = fpr;
         ROC(i, 3) = theta(i);
     end
-    
-    plot(ROC(:, 2), ROC(:, 1));
+end
     
 function [tpr, fpr] = ApplyThreshold(fc, nfc, theta)
     
@@ -23,3 +22,4 @@ function [tpr, fpr] = ApplyThreshold(fc, nfc, theta)
     
     tpr = n_tp / (n_tp + n_fn);
     fpr = n_fp / (n_tn + n_fp);
+end

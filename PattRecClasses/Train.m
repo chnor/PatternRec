@@ -49,7 +49,7 @@ function h = Train(features, test, n, ITER)
     % Main loop
     state = adaptStart(h);
 %     last_test_log_p = mean(cellfun(@(x) -logprob(h, x), test));
-    last_test_log_p = inf;
+    last_test_log_p = -Inf;
     for iter = 1:ITER
         h_new = h;
         % Train
@@ -67,11 +67,11 @@ function h = Train(features, test, n, ITER)
         % TODO: figure out what the heck the logP that
         % adaptAccum returns is. It certainly isn't the
         % same as log_p
-        log_p = mean(cellfun(@(x) -logprob(h_new, x), features));
-        test_log_p = mean(cellfun(@(x) -logprob(h_new, x), test));
+        log_p = mean(cellfun(@(x) logprob(h_new, x), features));
+        test_log_p = mean(cellfun(@(x) logprob(h_new, x), test));
         
         % Check for early stopping
-        if last_test_log_p < test_log_p
+        if last_test_log_p > test_log_p
             break;
         end
         % Check for degeneration
@@ -79,10 +79,11 @@ function h = Train(features, test, n, ITER)
             break;
         end
         
-        disp(['Training: ', num2str(log_p), ' vs Test: ', num2str(test_log_p)]);
+%         disp(['Training: ', num2str(log_p), ' vs Test: ', num2str(test_log_p)]);
         
         last_test_log_p = test_log_p;
         h = h_new;
     end
+    disp(['Test log probability: ', num2str(last_test_log_p)]);
     
 end
