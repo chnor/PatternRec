@@ -19,7 +19,7 @@ else
     x.length = 1;
     x.name = A;
     x.CharacterMat = DrawCharacter;
-    x.ExFeature = ExtractFeatures(x.CharacterMat);
+    x.ExFeature = PreprocessData(x.CharacterMat);
     dbMat(1) = {x};
     save(savefile, 'dbMat');
     return
@@ -44,7 +44,7 @@ end
     x.name = A;
     x.num = size;
     x.CharacterMat = DrawCharacter;
-    x.ExFeature = ExtractFeatures(x.CharacterMat);
+    x.ExFeature = PreprocessData(x.CharacterMat);
     dbMat{a, size} = x;
  
     save(savefile, 'dbMat');

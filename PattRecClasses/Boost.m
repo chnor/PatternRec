@@ -12,12 +12,11 @@
 %       Thetas: the HMM indices, thresholds, and parities
 %       thresh: the optimal boosting threshold
 
-function [HMM, Cparams] = Boost(data, labels, used_features, m, T)
+function [HMM, Cparams] = Boost(data, labels, m, T)
     
 	features = cell(1, length(data));
     for i = 1:length(data)
-        f = ExtractFeatures(data{i});
-        features{i} = f(used_features, :);
+        features{i} = PreprocessData(data{i});
     end
     
     Cparams = cell(1, length(unique(labels)));

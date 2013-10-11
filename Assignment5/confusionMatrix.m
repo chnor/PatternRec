@@ -3,7 +3,6 @@ function confusionMatrix(Classifier, name)
 %Default values:
     HMMs        = Classifier.HMMs;
     classes     = Classifier.classes;
-    features    = Classifier.features;
 %Initialization values:
 [charMatrix charTest] = LoadData;%Can uppload another db
 %A = cellfun(@ExtractFeatures,charMatrix,'UniformOutput',false);
@@ -12,10 +11,10 @@ length = size(charMatrix ,2); %this calculate the number of elements in our data
 Matrix = zeros(size(classes,2), size(classes,2));
 
 for i=1:length
-    
+    disp(['Iteration: ', num2str(i)]);
     %From user input
-    character = ExtractFeatures(charMatrix{i});
-    proba = logprob([HMMs{1,:}], character(features,:));
+    character = PreprocessData(charMatrix{i});
+    proba = logprob([HMMs{1,:}], character);
     [~, index] = max(proba);
     charwritten = classes(index);
     

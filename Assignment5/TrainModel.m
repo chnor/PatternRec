@@ -1,4 +1,4 @@
-function [HMMs, R] = TrainModel(data, labels, n, classes, used_features, frac, ITER)
+function [HMMs, R] = TrainModel(data, labels, n, classes, frac, ITER)
     
     assert(all(size(data) == size(labels)));
     assert(all(size(n) == size(classes)));
@@ -21,8 +21,7 @@ function [HMMs, R] = TrainModel(data, labels, n, classes, used_features, frac, I
     for i = 1:length(split_data)
         split_features{i} = cell(1, length(split_data{i}));
         for j = 1:length(split_data{i})
-            split_features{i}{j} = ExtractFeatures(split_data{i}{j});
-            split_features{i}{j} = split_features{i}{j}(used_features, :);
+            split_features{i}{j} = PreprocessData(split_data{i}{j});
         end
     end
     

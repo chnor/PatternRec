@@ -11,11 +11,10 @@ function InputWithConfusion(Classifier, characterToMatrix)
 
 HMMs        = Classifier.HMMs;
 classes     = Classifier.classes;
-features    = Classifier.features;
 
 character = DrawCharacter();
-character = ExtractFeatures(character);
-proba = logprob([HMMs{1,:}], character(features,:));
+character = PreprocessData(character);
+proba = logprob([HMMs{1,:}], character);
 [~, index] = max(proba);
 
 disp(['Written letter: ', classes(index)]);

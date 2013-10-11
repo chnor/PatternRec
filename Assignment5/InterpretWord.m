@@ -9,8 +9,7 @@ function word = InterpretWord(Classifier, data)
 %     DrawRects(CollapseRects(ExtractStrokeBounds(data)), 'g');
     data = SegmentWord(data);
     
-    features = cellfun(@ExtractFeatures, data, 'UniformOutput', false);
-    features = cellfun(@(x) x(Classifier.features, :), features, 'UniformOutput', false);
+    features = cellfun(@PreprocessData, data, 'UniformOutput', false);
     responses = zeros(length(Classifier.HMMs), length(data));
     for i = 1:size(data, 2)
         responses(:, i) = logprob([Classifier.HMMs{1, :}], features{i});
