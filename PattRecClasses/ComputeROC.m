@@ -11,6 +11,7 @@ function ROC = ComputeROC(fc, nfc)
         ROC(i, 2) = fpr;
         ROC(i, 3) = theta(i);
     end
+    ROC = [0 0 -Inf; ROC; 1 1 Inf];
 end
     
 function [tpr, fpr] = ApplyThreshold(fc, nfc, theta)

@@ -84,6 +84,6 @@ function h = Train(features, test, n, ITER)
         last_test_log_p = test_log_p;
         h = h_new;
     end
-    disp(['Test log probability: ', num2str(last_test_log_p)]);
+%     disp(['Test log probability: ', num2str(last_test_log_p)]);
     
 end
