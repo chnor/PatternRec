@@ -1,8 +1,14 @@
 % Segment multicharacter input and classify each written
-% character. For now this simply tries to classify each
-% character independently.
+% character using viterbi.
+% Input:
+%   Classifier
+%   MC: Language model arkov chain representing each possible
+%       letter transition
+%   data
+% Output:
+%   word: The classification result
 
-function word = InterpretWord(Classifier, data)
+function word = InterpretWordMC(Classifier, MC, data)
     
 %     DisplayCharacter(data);
 %     DrawRects(ExtractStrokeBounds(data), 'r');
@@ -15,7 +21,7 @@ function word = InterpretWord(Classifier, data)
         responses(:, i) = logprob([Classifier.HMMs{1, :}], features{i});
     end
     
-    [~, decision] = max(responses, [], 1);
+    decision = viterbi(MC, responses);
     word = Classifier.classes(decision);
     
 end

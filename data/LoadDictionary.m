@@ -1,4 +1,4 @@
-function dictionary = LoadDictionary(corpusname, n_words_to_extract)
+function dictionary = LoadDictionary(corpusname, n_words_to_extract, allowed_letters)
     
     dictionary = ConstructDictionary;
     
@@ -8,8 +8,19 @@ function dictionary = LoadDictionary(corpusname, n_words_to_extract)
     freqs = entries{2}';
     n_words_to_extract = min(n_words_to_extract, length(freqs));
     for i = 1:n_words_to_extract
-        disp(['Extracting: "', words{i}, '" with rank: ', num2str(i), ' frequency: ', num2str(freqs(i))]);
-        dictionary = AddWordToDictionary(words{i}, dictionary, freqs(i));
+        word = lower(words{i});
+        allowed = true;
+        for letter = word
+            if ~ismember(allowed_letters, letter)
+                allowed = false;
+            end
+        end
+        if ~allowed
+            disp(['Skipping: "', word, '"']);
+            continue;
+        end
+        disp(['Extracting: "', word, '" with rank: ', num2str(i), ' frequency: ', num2str(freqs(i))]);
+        dictionary = AddWordToDictionary(word, dictionary, freqs(i));
     end
     
     % Calculate log probabilities for each node transition in tree
