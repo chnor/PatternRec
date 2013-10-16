@@ -13,6 +13,7 @@ function word = InterpretWord(Classifier, data)
     responses = zeros(length(Classifier.HMMs), length(data));
     for i = 1:size(data, 2)
         responses(:, i) = logprob([Classifier.HMMs{1, :}], features{i});
+        responses(:, i) = log(Classifier.priors)' + responses(:, i);
     end
     
     [~, decision] = max(responses, [], 1);
